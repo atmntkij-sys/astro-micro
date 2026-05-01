@@ -1,36 +1,57 @@
 ---
 import Layout from "@layouts/Layout.astro";
 import Container from "@components/Container.astro";
-import CategoryMenu from "@components/CategoryMenu.astro"; // 방금 만든 컴포넌트 추가
+// @components/CategoryMenu.astro 파일이 실제 존재한다면 아래 주석을 풀고 section 대신 쓰셔도 됩니다.
+// import CategoryMenu from "@components/CategoryMenu.astro"; 
 
-import { SITE, HOME, SOCIALS } from "@consts";
+import { SITE, HOME } from "@consts";
 import ArrowCard from "@components/ArrowCard.astro";
-import Link from "@components/Link.astro";
 import { getCollection } from "astro:content";
 
+// 1. 데이터 수집 및 정렬
+const allPosts = await getCollection("blog", ({ data }) => !data.draft);
 
-// 블로그 포스트만 가져옵니다. 프로젝트 관련 코드는 삭제했습니다.
-const blog = (await getCollection("blog"))
-  .filter((post) => !post.data.draft)
+// 2. 카테고리 중복 제거 추출
+const categories = [...new Set(allPosts.map(post => post.data.category).filter(Boolean))].sort();
+
+// 3. 홈 화면용 최신글 (사이트 설정 개수만큼)
+const blog = allPosts
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
   .slice(0, SITE.NUM_POSTS_ON_HOMEPAGE);
 ---
 
 <Layout title={HOME.TITLE} description={HOME.DESCRIPTION}>
   <Container>
-    <!-- 1000px 내부를 2:8 정도로 쪼개는 그리드 레이아웃 -->
     <div class="grid grid-cols-1 md:grid-cols-[220px_1fr] gap-12">
       
-      <!-- 좌측: 사이드바 메뉴 -->
-      <!-- 수정 전 
-      <aside class="hidden md:block">
-      -->      
-
-      <!-- 수정 후 (무조건 보임) -->
-      <aside class="block">
-        <div class="sticky top-24">
-          <CategoryMenu />
-        </div>
+      <!-- 좌측: 사이드바 (카테고리 메뉴) -->
+      <aside class="space-y-4">
+        <h2 class="font-bold text-lg text-black dark:text-white border-b pb-2 mb-4">
+          Categories 🔬
+        </h2>
+        <ul class="flex flex-col gap-2">
+          <li>
+            <a href="/blog" class="hover:text-blue-500 transition-colors">
+              전체보기 ({allPosts.length})
+            </a>
+          </li>
+          {categories.map(category => {
+            const count = allPosts.filter(p => p.data.category === category).length;
+            return (
+              <li>
+                <a 
+                  href={`/category/${category}`} 
+                  class="flex justify-between items-center hover:text-blue-500 transition-colors group"
+                >
+                  <span class="text-sm"># {category}</span>
+                  <span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full group-hover:bg-blue-100 dark:group-hover:bg-blue-900">
+                    {count}
+                  </span>
+                </a>
+              </li>
+            );
+          })}
+        </ul>
       </aside>
 
       <!-- 우측: 메인 본문 -->
@@ -40,6 +61,7 @@ const blog = (await getCollection("blog"))
             <h2 class="font-semibold text-black dark:text-white">
               Latest posts
             </h2>
+            <a href="/blog" class="text-sm text-blue-500 hover:underline">모든 글 보기 &rarr;</a>
           </div>
           <ul class="not-prose flex flex-col gap-4">
             {blog.map((post) => (
