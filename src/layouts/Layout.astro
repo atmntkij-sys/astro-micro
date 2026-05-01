@@ -69,15 +69,17 @@ const { title, description } = Astro.props;
       const sidebarClose = document.getElementById('sidebar-close');
       const sidebarOverlay = document.getElementById('sidebar-overlay');
       function openSidebar() {
+        if (!sidebar || !sidebarOverlay) return;
         sidebar.classList.remove('hidden');
         sidebar.classList.remove('-translate-x-full');
         sidebarOverlay.classList.remove('hidden');
         document.body.style.overflow = 'hidden';
       }
       function closeSidebar() {
+        if (!sidebar || !sidebarOverlay) return;
         sidebar.classList.add('-translate-x-full');
         sidebarOverlay.classList.add('hidden');
-        setTimeout(()=>sidebar.classList.add('hidden'), 200);
+        setTimeout(()=>{ if(sidebar) sidebar.classList.add('hidden'); }, 200);
         document.body.style.overflow = '';
       }
       sidebarToggle && sidebarToggle.addEventListener('click', openSidebar);
@@ -85,6 +87,7 @@ const { title, description } = Astro.props;
       sidebarOverlay && sidebarOverlay.addEventListener('click', closeSidebar);
       // 데스크탑 리사이즈 시 사이드바 상태 초기화
       window.addEventListener('resize', () => {
+        if (!sidebar || !sidebarOverlay) return;
         if(window.innerWidth >= 768) {
           sidebar.classList.remove('hidden', '-translate-x-full');
           sidebarOverlay.classList.add('hidden');
