@@ -22,7 +22,12 @@ const blog = (await getCollection("blog"))
     <div class="grid grid-cols-1 md:grid-cols-[220px_1fr] gap-12">
       
       <!-- 좌측: 사이드바 메뉴 -->
+      <!-- 수정 전 
       <aside class="hidden md:block">
+      -->      
+
+      <!-- 수정 후 (무조건 보임) -->
+      <aside class="block">
         <div class="sticky top-24">
           <CategoryMenu />
         </div>
