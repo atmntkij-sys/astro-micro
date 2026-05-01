@@ -5,11 +5,8 @@ import { SITE, HOME } from "@consts";
 import ArrowCard from "@components/ArrowCard.astro";
 import { getCollection } from "astro:content";
 
-// 1. 데이터 수집 (로그 확인용 console.log 포함)
 const allPosts = await getCollection("blog", ({ data }) => !data.draft);
 const categories = [...new Set(allPosts.map(post => post.data.category?.trim()).filter(Boolean))].sort();
-
-console.log("검색된 카테고리:", categories); // 빌드 로그에서 확인 가능
 
 const blog = allPosts
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
@@ -18,61 +15,41 @@ const blog = allPosts
 
 <Layout title={HOME.TITLE} description={HOME.DESCRIPTION}>
   <Container>
-    <!-- 레이아웃을 Flex로 변경하여 더 안정적으로 배치 -->
-    <div class="flex flex-col md:flex-row gap-10">
+    <div class="space-y-10">
       
-      <!-- 좌측 사이드바 (너비 고정 및 가시성 확보) -->
-      <aside class="w-full md:w-[200px] shrink-0">
-        <div class="sticky top-24">
-          <h2 class="font-bold text-xl text-black dark:text-white mb-6 border-b-2 border-blue-500 pb-2">
-            Categories
-          </h2>
-          
-          {categories.length === 0 && <p class="text-sm opacity-50">카테고리 없음</p>}
-          
-          <nav>
-            <ul class="space-y-4">
-              <li>
-                <a href="/blog" class="block py-1 hover:text-blue-500 font-medium transition-colors">
-                  전체보기 ({allPosts.length})
-                </a>
-              </li>
-              {categories.map(category => (
-                <li>
-                  <a 
-                    href={`/category/${category}`} 
-                    class="flex items-center justify-between group py-1 hover:text-blue-500 transition-colors"
-                  >
-                    <span class="text-sm"># {category}</span>
-                    <span class="text-[10px] bg-gray-200 dark:bg-gray-800 px-2 py-0.5 rounded-full group-hover:bg-blue-500 group-hover:text-white">
-                      {allPosts.filter(p => p.data.category?.trim() === category).length}
-                    </span>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </nav>
+      <!-- [테스트] 카테고리 영역: 화면 상단에 크게 배치 -->
+      <section class="animate border-b pb-8">
+        <h2 class="font-bold text-black dark:text-white text-xl mb-4">
+          분류별 보기 ({categories.length})
+        </h2>
+        <div class="flex flex-wrap gap-3">
+          <a href="/blog" class="px-4 py-2 rounded-md bg-black text-white dark:bg-white dark:text-black text-sm font-medium">
+            전체 ({allPosts.length})
+          </a>
+          {categories.map(category => (
+            <a 
+              href={`/category/${category}`} 
+              class="px-4 py-2 rounded-md bg-gray-100 dark:bg-gray-800 hover:bg-blue-500 hover:text-white transition-all text-sm shadow-sm"
+            >
+              #{category} ({allPosts.filter(p => p.data.category?.trim() === category).length})
+            </a>
+          ))}
         </div>
-      </aside>
+      </section>
 
-      <!-- 우측 메인 영역 -->
-      <main class="flex-grow">
-        <section class="animate space-y-6">
-          <div class="flex items-center justify-between border-b pb-2 mb-6">
-            <h2 class="font-semibold text-black dark:text-white text-lg">
-              Latest posts
-            </h2>
-            <a href="/blog" class="text-xs text-blue-500 hover:underline">전체보기 &rarr;</a>
-          </div>
-          
-          {blog.length === 0 && <p>등록된 게시글이 없습니다.</p>}
-          
-          <ul class="not-prose flex flex-col gap-4">
-            {blog.map((post) => (
-              <li><ArrowCard entry={post} /></li>
-            ))}
-          </ul>
-        </section>
+      <!-- 포스트 목록 영역 -->
+      <main class="animate space-y-6">
+        <div class="flex items-center justify-between">
+          <h2 class="font-semibold text-black dark:text-white">
+            Latest posts
+          </h2>
+          <a href="/blog" class="text-sm text-blue-500 hover:underline">View all &rarr;</a>
+        </div>
+        <ul class="not-prose flex flex-col gap-4">
+          {blog.map((post) => (
+            <li><ArrowCard entry={post} /></li>
+          ))}
+        </ul>
       </main>
 
     </div>
