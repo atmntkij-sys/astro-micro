@@ -5,13 +5,12 @@ import { SITE, HOME } from "@consts";
 import ArrowCard from "@components/ArrowCard.astro";
 import { getCollection } from "astro:content";
 
-// 1. 데이터 통합 및 중복 제거
+// 1. 데이터 수집 (로그 확인용 console.log 포함)
 const allPosts = await getCollection("blog", ({ data }) => !data.draft);
-
-// 카테고리 추출 및 정렬 (비어있는 값 방어)
 const categories = [...new Set(allPosts.map(post => post.data.category?.trim()).filter(Boolean))].sort();
 
-// 최신글 추출
+console.log("검색된 카테고리:", categories); // 빌드 로그에서 확인 가능
+
 const blog = allPosts
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
   .slice(0, SITE.NUM_POSTS_ON_HOMEPAGE);
@@ -19,56 +18,55 @@ const blog = allPosts
 
 <Layout title={HOME.TITLE} description={HOME.DESCRIPTION}>
   <Container>
-    <div class="grid grid-cols-1 md:grid-cols-[240px_1fr] gap-10 items-start">
+    <!-- 레이아웃을 Flex로 변경하여 더 안정적으로 배치 -->
+    <div class="flex flex-col md:flex-row gap-10">
       
-      <!-- 좌측 사이드바: 확실한 시각적 구분 추가 -->
-      <aside class="md:sticky md:top-24 space-y-8 pr-4 border-r border-black/5 dark:border-white/10 min-h-[300px]">
-        <div>
-          <h2 class="font-bold text-black dark:text-white text-lg mb-4 flex items-center gap-2">
-            <span>Categories</span>
-            <span class="text-xs font-normal opacity-50">({categories.length})</span>
+      <!-- 좌측 사이드바 (너비 고정 및 가시성 확보) -->
+      <aside class="w-full md:w-[200px] shrink-0">
+        <div class="sticky top-24">
+          <h2 class="font-bold text-xl text-black dark:text-white mb-6 border-b-2 border-blue-500 pb-2">
+            Categories
           </h2>
           
+          {categories.length === 0 && <p class="text-sm opacity-50">카테고리 없음</p>}
+          
           <nav>
-            <ul class="flex flex-col gap-3">
+            <ul class="space-y-4">
               <li>
-                <a href="/blog" class="text-sm hover:text-blue-500 transition-colors flex justify-between items-center group">
-                  <span>전체보기</span>
-                  <span class="opacity-30 group-hover:opacity-100">{allPosts.length}</span>
+                <a href="/blog" class="block py-1 hover:text-blue-500 font-medium transition-colors">
+                  전체보기 ({allPosts.length})
                 </a>
               </li>
-              {categories.map(category => {
-                const count = allPosts.filter(p => p.data.category?.trim() === category).length;
-                return (
-                  <li>
-                    <a 
-                      href={`/category/${category}`} 
-                      class="text-sm hover:text-blue-500 transition-colors flex justify-between items-center group"
-                    >
-                      <span class="opacity-80 group-hover:opacity-100"># {category}</span>
-                      <span class="text-[10px] bg-black/5 dark:bg-white/5 px-2 py-0.5 rounded-full group-hover:bg-blue-500 group-hover:text-white transition-all">
-                        {count}
-                      </span>
-                    </a>
-                  </li>
-                );
-              })}
+              {categories.map(category => (
+                <li>
+                  <a 
+                    href={`/category/${category}`} 
+                    class="flex items-center justify-between group py-1 hover:text-blue-500 transition-colors"
+                  >
+                    <span class="text-sm"># {category}</span>
+                    <span class="text-[10px] bg-gray-200 dark:bg-gray-800 px-2 py-0.5 rounded-full group-hover:bg-blue-500 group-hover:text-white">
+                      {allPosts.filter(p => p.data.category?.trim() === category).length}
+                    </span>
+                  </a>
+                </li>
+              ))}
             </ul>
           </nav>
         </div>
-
-        {/* 여기에 추가적인 배너나 링크를 넣을 수 있는 여유 공간 */}
       </aside>
 
       <!-- 우측 메인 영역 -->
-      <main class="space-y-12">
+      <main class="flex-grow">
         <section class="animate space-y-6">
-          <div class="flex items-center justify-between">
-            <h2 class="font-semibold text-black dark:text-white">
+          <div class="flex items-center justify-between border-b pb-2 mb-6">
+            <h2 class="font-semibold text-black dark:text-white text-lg">
               Latest posts
             </h2>
-            <a href="/blog" class="text-xs hover:underline opacity-60">View all &rarr;</a>
+            <a href="/blog" class="text-xs text-blue-500 hover:underline">전체보기 &rarr;</a>
           </div>
+          
+          {blog.length === 0 && <p>등록된 게시글이 없습니다.</p>}
+          
           <ul class="not-prose flex flex-col gap-4">
             {blog.map((post) => (
               <li><ArrowCard entry={post} /></li>
