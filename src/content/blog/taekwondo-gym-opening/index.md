@@ -1,8 +1,9 @@
 ---
-title: 동생과 함께한 예전 체육관 포올태권도 관 개관일 추억
-pubDate: 2026-05-01
-description: 형과 동생이 함께 방문한 체육관 포올태권도 관 개관식 날의 소중한 순간들
+title: "동생과 함께한 예전 체육관 포올태권도 관 개관일 추억"
+date: 2026-04-29  
+description: "형과 동생이 함께 방문한 체육관 포올태권도 관 개관식 날의 소중한 순간들"
 tags: ["가족", "태권도", "추억", "체육관"]
+category: "추억"  
 slug: "family-taekwondo-gym-opening"
 draft: false
 ---
