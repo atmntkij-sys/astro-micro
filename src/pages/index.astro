@@ -1,10 +1,13 @@
 ---
 import Layout from "@layouts/Layout.astro";
 import Container from "@components/Container.astro";
+import CategoryMenu from "@components/CategoryMenu.astro"; // 방금 만든 컴포넌트 추가
+
 import { SITE, HOME, SOCIALS } from "@consts";
 import ArrowCard from "@components/ArrowCard.astro";
 import Link from "@components/Link.astro";
 import { getCollection } from "astro:content";
+
 
 // 블로그 포스트만 가져옵니다. 프로젝트 관련 코드는 삭제했습니다.
 const blog = (await getCollection("blog"))
@@ -15,76 +18,32 @@ const blog = (await getCollection("blog"))
 
 <Layout title={HOME.TITLE} description={HOME.DESCRIPTION}>
   <Container>
-    <aside data-pagefind-ignore>
-      <h1 class="font-semibold text-black dark:text-white">
-        안녕하세요, 인재웹입니다 🔬
-      </h1>
-      <div class="space-y-16">
-        <section>
-          <article class="space-y-4">
-            <span>
-              <p>
-                Smart Web 이 기록하는 맛집과 기술 이야기입니다.
-              </p>
-            </span>
-          </article>
-        </section>
+    <!-- 1000px 내부를 2:8 정도로 쪼개는 그리드 레이아웃 -->
+    <div class="grid grid-cols-1 md:grid-cols-[220px_1fr] gap-12">
+      
+      <!-- 좌측: 사이드바 메뉴 -->
+      <aside class="hidden md:block">
+        <div class="sticky top-24">
+          <CategoryMenu />
+        </div>
+      </aside>
 
+      <!-- 우측: 메인 본문 -->
+      <main>
         <section class="animate space-y-6">
           <div class="flex flex-wrap items-center justify-between gap-y-2">
             <h2 class="font-semibold text-black dark:text-white">
               Latest posts
             </h2>
-            <Link href="/blog"> See all posts </Link>
           </div>
           <ul class="not-prose flex flex-col gap-4">
-            {
-              blog.map((post) => (
-                <li>
-                  <ArrowCard entry={post} />
-                </li>
-              ))
-            }
+            {blog.map((post) => (
+              <li><ArrowCard entry={post} /></li>
+            ))}
           </ul>
         </section>
+      </main>
 
-        {/* 이 부분에 있던 Recent projects 섹션을 완전히 제거했습니다. */}
-
-        <section class="animate space-y-4">
-          <h2 class="font-semibold text-black dark:text-white">
-            Let's Connect
-          </h2>
-          <article>
-            <p>
-              문의사항이 있으시면 아래 소셜 미디어나 이메일로 연락 주세요.
-            </p>
-          </article>
-          <ul class="not-prose flex flex-wrap gap-2">
-            {
-              SOCIALS.map((SOCIAL) => (
-                <li class="flex gap-x-2 text-nowrap">
-                  <Link
-                    href={SOCIAL.HREF}
-                    external
-                    aria-label={`${SITE.TITLE} on ${SOCIAL.NAME}`}
-                  >
-                    {SOCIAL.NAME}
-                  </Link>
-                  {"/"}
-                </li>
-              ))
-            }
-            <li class="line-clamp-1">
-              <Link
-                href={`mailto:${SITE.EMAIL}`}
-                aria-label={`Email ${SITE.TITLE}`}
-              >
-                {SITE.EMAIL}
-              </Link>
-            </li>
-          </ul>
-        </section>
-      </div>
-    </aside>
+    </div>
   </Container>
 </Layout>
