@@ -29,14 +29,17 @@ const { title, description } = Astro.props;
     </noscript>
     <div class="flex min-h-screen flex-col md:flex-row">
       <!-- 모바일 메뉴 토글 버튼 -->
-      <button id="sidebar-toggle" class="md:hidden fixed top-4 left-4 z-50 bg-gray-800 text-white rounded p-2 focus:outline-none" onclick="document.getElementById('sidebar').classList.toggle('hidden')">
+      <button id="sidebar-toggle" class="md:hidden fixed top-4 left-4 z-50 bg-gray-800 text-white rounded p-2 focus:outline-none" aria-label="메뉴 열기">
         ☰
       </button>
-      <!-- 좌측 사이드바 (모바일: 상단, 데스크탑: 좌측) -->
-      <aside id="sidebar" class="w-full md:w-64 bg-gray-50 dark:bg-gray-900 border-b md:border-b-0 md:border-r border-gray-200 dark:border-gray-800 p-6 md:sticky md:top-0 h-auto md:h-screen overflow-y-auto hidden md:block">
+      <!-- 오버레이(모바일) -->
+      <div id="sidebar-overlay" class="fixed inset-0 bg-black/40 z-40 hidden md:hidden" style="backdrop-filter: blur(2px);"></div>
+      <!-- 좌측 사이드바 (모바일: 오버레이, 데스크탑: 좌측 고정) -->
+      <aside id="sidebar" class="fixed md:static top-0 left-0 h-full md:h-screen w-64 bg-gray-50 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 p-6 z-50 transform -translate-x-full md:translate-x-0 transition-transform duration-200 ease-in-out md:block hidden md:flex flex-col">
         <nav class="space-y-4">
-          <div class="mb-6">
+          <div class="mb-6 flex justify-between items-center">
             <h3 class="font-bold text-lg text-black dark:text-white">Navigation</h3>
+            <button id="sidebar-close" class="md:hidden text-2xl text-gray-700 dark:text-gray-200" aria-label="메뉴 닫기">×</button>
           </div>
           <a href="/" class="block px-4 py-2 rounded-md text-black dark:text-white hover:bg-blue-500 hover:text-white transition-all">
             Home
@@ -50,7 +53,7 @@ const { title, description } = Astro.props;
         </nav>
       </aside>
       <!-- 메인 콘텐츠 -->
-      <div class="flex-1 flex flex-col">
+      <div class="flex-1 flex flex-col min-w-0">
         <Header />
         <main class="flex-1">
           <slot />
@@ -60,13 +63,36 @@ const { title, description } = Astro.props;
     </div>
     <Pagefind />
     <script>
-      // 모바일에서 바깥 클릭 시 사이드바 닫기
-      document.addEventListener('click', function(e) {
-        const sidebar = document.getElementById('sidebar');
-        const toggle = document.getElementById('sidebar-toggle');
-        if (!sidebar || !toggle) return;
-        if (!sidebar.classList.contains('hidden') && !sidebar.contains(e.target) && e.target !== toggle) {
-          sidebar.classList.add('hidden');
+      // 반응형 사이드바 토글
+      const sidebar = document.getElementById('sidebar');
+      const sidebarToggle = document.getElementById('sidebar-toggle');
+      const sidebarClose = document.getElementById('sidebar-close');
+      const sidebarOverlay = document.getElementById('sidebar-overlay');
+      function openSidebar() {
+        sidebar.classList.remove('hidden');
+        sidebar.classList.remove('-translate-x-full');
+        sidebarOverlay.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+      }
+      function closeSidebar() {
+        sidebar.classList.add('-translate-x-full');
+        sidebarOverlay.classList.add('hidden');
+        setTimeout(()=>sidebar.classList.add('hidden'), 200);
+        document.body.style.overflow = '';
+      }
+      sidebarToggle && sidebarToggle.addEventListener('click', openSidebar);
+      sidebarClose && sidebarClose.addEventListener('click', closeSidebar);
+      sidebarOverlay && sidebarOverlay.addEventListener('click', closeSidebar);
+      // 데스크탑 리사이즈 시 사이드바 상태 초기화
+      window.addEventListener('resize', () => {
+        if(window.innerWidth >= 768) {
+          sidebar.classList.remove('hidden', '-translate-x-full');
+          sidebarOverlay.classList.add('hidden');
+          document.body.style.overflow = '';
+        } else {
+          sidebar.classList.add('hidden', '-translate-x-full');
+          sidebarOverlay.classList.add('hidden');
+          document.body.style.overflow = '';
         }
       });
     </script>
