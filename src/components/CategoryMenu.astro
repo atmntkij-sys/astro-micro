@@ -1,0 +1,41 @@
+---
+// src/components/CategoryMenu.astro
+import { getCollection } from "astro:content";
+
+const allPosts = await getCollection("blog");
+
+// 1. 모든 포스트에서 category 필드를 추출 (없으면 '미분류')
+// 2. [...new Set()]으로 중복 제거
+const categories = [...new Set(allPosts.map((post) => post.data.category || "미분류"))].sort();
+---
+
+<nav class="space-y-4">
+  <h2 class="font-bold text-lg border-b pb-2 mb-4 text-black dark:text-white">
+    Categories 🔬
+  </h2>
+  <ul class="space-y-2">
+    <li>
+      <a href="/blog" class="hover:text-black dark:hover:text-white transition-colors">
+        전체보기 ({allPosts.length})
+      </a>
+    </li>
+    {
+      categories.map((category) => {
+        const count = allPosts.filter((p) => (p.data.category || "미분류") === category).length;
+        return (
+          <li>
+            <a 
+              href={`/category/${category}`} 
+              class="flex justify-between items-center hover:text-black dark:hover:text-white transition-colors"
+            >
+              <span># {category}</span>
+              <span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full">
+                {count}
+              </span>
+            </a>
+          </li>
+        );
+      })
+    }
+  </ul>
+</nav>
