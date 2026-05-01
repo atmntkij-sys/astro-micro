@@ -1,0 +1,74 @@
+---
+import { getCollection } from "astro:content";
+// 선배님 확인 결과: BaseLayout이 아니라 Layout.astro 임포트
+import Layout from "../../layouts/Layout.astro";
+import Container from "../../components/Container.astro";
+import { SITE } from "@consts";
+
+export async function getStaticPaths() {
+  const allPosts = await getCollection("blog", ({ data }) => {
+    // 드래프트 글 제외 및 봇이 작성한 글 포함 확인
+    return data.draft !== true;
+  });
+
+  // 카테고리 추출 (공백 제거 및 기본값 처리)
+  const categories = [...new Set(allPosts.map((post) => post.data.category?.trim() || "미분류"))];
+
+  return categories.map((category) => {
+    const filteredPosts = allPosts.filter(
+      (post) => (post.data.category?.trim() || "미분류") === category
+    );
+    return {
+      params: { category },
+      props: { posts: filteredPosts },
+    };
+  });
+}
+
+const { category } = Astro.params;
+const { posts } = Astro.props;
+
+// 최신순 정렬
+const sortedPosts = posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<!-- Layout 컴포넌트에 title과 description을 필수 전달해야 함 -->
+<Layout 
+  title={`#${category} 관련 글`} 
+  description={`${category} 카테고리의 포스트 목록입니다. 총 ${posts.length}개의 글이 있습니다.`}
+>
+  <Container>
+    <div class="space-y-10">
+      <div class="animate font-semibold text-black dark:text-white text-2xl">
+        #{category} <span class="text-base font-normal text-gray-500">({posts.length})</span>
+      </div>
+      
+      <ul class="flex flex-col gap-4">
+        {sortedPosts.map((post) => (
+          <li class="animate">
+            <div class="text-sm opacity-60">
+              {post.data.date.toLocaleDateString('ko-KR', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+              })}
+            </div>
+            <a 
+              href={`/blog/${post.id}`} 
+              class="font-medium text-black dark:text-white hover:text-blue-500 dark:hover:text-blue-400 transition-colors"
+            >
+              {post.data.title}
+            </a>
+            <p class="text-sm line-clamp-2 opacity-70">
+              {post.data.description}
+            </p>
+          </li>
+        ))}
+      </ul>
+      
+      <div class="animate pt-10">
+        <a href="/blog" class="text-sm hover:underline text-blue-500">&larr; 전체 글로 돌아가기</a>
+      </div>
+    </div>
+  </Container>
+</Layout>
