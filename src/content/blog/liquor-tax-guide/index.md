@@ -2,7 +2,6 @@
 title: "주류의 종류와 중국 술 시장 현황 및 구매 세금 가이드"
 date: "2026-05-02"
 description: "다양한 주류의 분류부터 중국 술의 최신 트렌드, 그리고 주류 구매 시 반드시 알아야 할 세금 정보까지 담백하게 정리했습니다."
-draft: false
 tags: ["주류", "중국술", "세금", "상식"]
 slug: "liquor-and-chinese-spirits-guide"
 ---
