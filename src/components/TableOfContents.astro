@@ -2,7 +2,9 @@
 import TableOfContentsHeading from "./TableOfContentsHeading.astro";
 
 // https://kld.dev/building-table-of-contents/
-const { headings } = Astro.props;
+//const { headings } = Astro.props;
+const { headings = [] } = Astro.props;
+
 const toc = buildToc(headings);
 
 export interface Heading {
