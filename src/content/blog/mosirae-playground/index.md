@@ -32,8 +32,6 @@ slug: "mosirae-playground"
 *   **방문 시간**: 주말 오전이나 해 질 녘은 비교적 덜 붐비고 사진 찍기에도 최적입니다.
 ![해 질 녘 놀이터](images/mosirae_06.jpg)
 
-## 지도
-<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3188.1078952567127!2d127.91032419999999!3d36.95947989999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x35648700198aa781%3A0x5a5b3b227dec2edc!2z66qo7Iuc656Y7Ja066aw7J2064aA7J207YSw!5e0!3m2!1sko!2skr!4v1778549310633!5m2!1sko!2skr" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
 
 *   **준비물**: 돗자리와 간단한 간식을 챙겨가면 놀이 후 피크닉 시간을 즐길 수 있습니다.
 *   **주차**: 주말에는 주차 공간이 협소할 수 있으니 조금 이른 시간에 방문하시는 것을 추천합니다.
@@ -43,3 +41,7 @@ slug: "mosirae-playground"
 ---
 *아이와 함께 특별한 일상을 만들고 싶다면, 지금 모시래어린이놀이터로 떠나보세요!*
 ![놀이터 풍경](images/mosirae_08.jpg)
+
+
+## 지도
+<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3188.1078952567127!2d127.91032419999999!3d36.95947989999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x35648700198aa781%3A0x5a5b3b227dec2edc!2z66qo7Iuc656Y7Ja066aw7J2064aA7J207YSw!5e0!3m2!1sko!2skr!4v1778549310633!5m2!1sko!2skr" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
