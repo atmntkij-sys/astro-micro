@@ -33,22 +33,4 @@ category: "맛집"
 **7곡 제면소**, 단순히 맛있는 냉면 집을 넘어, 건강과 배려까지 생각하는 진정한 맛집이었습니다.
 
 ## 지도
-<!-- * 카카오맵 - 지도퍼가기 -->
-<!-- 1. 지도 노드 -->
-<div id="daumRoughmapContainer1778549518078" class="root_daum_roughmap root_daum_roughmap_landing"></div>
-
-<!--
-	2. 설치 스크립트
-	* 지도 퍼가기 서비스를 2개 이상 넣을 경우, 설치 스크립트는 하나만 삽입합니다.
--->
-<script charset="UTF-8" class="daum_roughmap_loader_script" src="https://ssl.daumcdn.net/dmaps/map_js_init/roughmapLoader.js"></script>
-
-<!-- 3. 실행 스크립트 -->
-<script charset="UTF-8">
-	new daum.roughmap.Lander({
-		"timestamp" : "1778549518078",
-		"key" : "n9iajn9giy3",
-		"mapWidth" : "640",
-		"mapHeight" : "360"
-	}).render();
-</script>
+<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3186.8575170648137!2d127.9270172!3d36.989334099999994!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x356486f99250ebeb%3A0x8901893bfd39dd47!2z7Lap7LKt67aB64-EIOy2qeyjvOyLnCDquIjsoJw36ri4IDE4!5e0!3m2!1sko!2skr!4v1778549809757!5m2!1sko!2skr" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
